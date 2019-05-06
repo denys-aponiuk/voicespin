@@ -1,0 +1,37 @@
+<table mat-table
+       [dataSource]="planets$ | async"
+       multiTemplateDataRows
+       class="mat-elevation-z8">
+  <ng-container matColumnDef="{{field}}" *ngFor="let field of tableFields">
+    <th mat-header-cell *matHeaderCellDef> {{field}} </th>
+    <td mat-cell *matCellDef="let element"> {{element[field]}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell
+        *matCellDef="let element"
+        [attr.colspan]="tableFields.length">
+      <div class="example-element-detail"
+           [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+        <ul class="wrapper-list">
+          <p>Films:</p>
+          <span *ngIf="element.films.length === 0"> - </span>
+          <li *ngFor="let film of element.films">{{ film.title }}</li>
+        </ul>
+        <ul class="wrapper-list">
+          <p>Names of residents</p>
+          <span *ngIf="element.residents.length === 0"> - </span>
+          <li *ngFor="let person of element.residents">{{ person.name }}</li>
+        </ul>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="tableFields"></tr>
+  <tr mat-row *matRowDef="let element; columns: tableFields;"
+      class="example-element-row"
+      [class.example-expanded-row]="expandedElement === element"
+      (click)="expandedElement = expandedElement === element ? null : element">
+  </tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+</table>
